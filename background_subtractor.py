@@ -41,7 +41,9 @@ class BackgroundExtractor:
 
         thresh = cv2.threshold(frameDelta, 15, 255, cv2.THRESH_BINARY)[1]
         thresh = cv2.dilate(thresh, None, iterations=2)
-        cv2.imshow("Countor", thresh)
+
+        if self.show_feed["contour"]:
+            cv2.imshow("Countor", thresh)
 
         (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                      cv2.CHAIN_APPROX_SIMPLE)
@@ -53,7 +55,7 @@ class BackgroundExtractor:
             x, y, w, h = cv2.boundingRect(a)
             cropped_images.append((frame[y:y + h, x:x + w], (x, y, w, h)))
 
-            if self.show_feed["contour"]:
+            if self.show_feed["detection"]:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
                 cv2.imshow('Video CONTOUR', frame)
 
@@ -136,18 +138,16 @@ if __name__ == "__main__":
                     minSize=(30, 30),
                     flags=cv2.cv.CV_HAAR_SCALE_IMAGE
                 )
-                for face in faces:
-                    (x1, y1, w1, h1) = face
-                    x, y, w, h = bounding_box
-                    cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-                cv2.imshow('Face detection', frame)
+                if conf["show_video"]["detection"]:
+                    for face in faces:
+                        (x1, y1, w1, h1) = face
+                        x, y, w, h = bounding_box
+                        cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
+                    cv2.imshow('Face detection', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     except KeyboardInterrupt:
         pass
-    # When everything is done, release the capture
-    video_capture.release()
-    cv2.destroyAllWindows()
 
 
