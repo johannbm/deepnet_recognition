@@ -8,7 +8,8 @@ import sys
 import inspect
 import os
 import signal
-import camera
+from imutils.video import VideoStream
+
 
 def to_node(type, message):
     # convert to json and print (node helper will read from stdout)
@@ -31,7 +32,7 @@ path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfr
 
 conf = json.load(open(path_to_file + '/conf.json'))
 
-camera = camera.get_camera(False)
+camera = VideoStream(usePiCamera=True > 0).start()
 time.sleep(conf["camera_warmup_time"])
 
 # Load a sample picture and learn how to recognize it.
