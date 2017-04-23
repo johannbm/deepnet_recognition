@@ -1,0 +1,14 @@
+{
+	"show_video": {"average": false, "blur":false, "contour":false, "recognition":true},
+	"camera_warmup_time": 2,
+	"delta_thresh": 5,
+	"min_area": 500,
+	"dynamic_background": true,
+	"cascade_path": "cascades/lbpcascade_frontalface.xml",
+	"consecutive_negative_seconds_limit": 3,
+	"users": ["Johannes", "Ingunn", "Mathias", "Jessie"],
+	"detection_interval": 2,
+	"logout_time":5,
+	"capture_device":0,
+	"consecutive_detections": 5
+}
