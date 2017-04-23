@@ -1,11 +1,10 @@
 import cv2
 import time
 import imutils
-from picamera.array import PiRGBArray
-from picamera import PiCamera
 import json
 import os
 import inspect
+from imutils.video import VideoStream
 
 class BackgroundExtractor:
 
@@ -23,8 +22,7 @@ class BackgroundExtractor:
         self.show_feed = conf["show_video"]
         self.is_dynamic = conf["dynamic_background"]
         self.face_cascade = cv2.CascadeClassifier(os.path.join(path_to_file, conf["cascade_path"]))
-	print os.path.join(path_to_file, conf["cascade_path"])
-	
+
 
     def getPotentialRegions(self, frame):
         frame = imutils.resize(frame, width=500)
@@ -104,22 +102,18 @@ class BackgroundExtractor:
 
 
 if __name__ == "__main__":
-    #video_capture = cv2.VideoCapture(0)
     conf = json.load(open('conf.json'))
     path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    video_capture = PiCamera()
-    video_capture.resolution = (640, 480)
-    video_capture.framerate = 16
-    raw_capture = PiRGBArray(video_capture, size=(640,480))
+
+    video_capture = VideoStream(usePiCamera=False > 0).start()
     time.sleep(2.0)
-    video_capture.capture(raw_capture, format="bgr")
-    bgsub = BackgroundExtractor(raw_capture.array, conf, path_to_file)
+
+    bgsub = BackgroundExtractor(video_capture.read(), conf, path_to_file)
     face_cascade = cv2.CascadeClassifier('cascades/lbpcascade_frontalface.xml')
     debug=True
-    raw_capture.truncate(0)
     try:
-        for f in video_capture.capture_continuous(raw_capture, format="bgr", use_video_port=True):
-            frame = f.array
+        while True:
+            frame = video_capture.read()
             frame = imutils.resize(frame, width=500)
 
             potentialAreas = bgsub.getPotentialRegions(frame)
@@ -143,7 +137,6 @@ if __name__ == "__main__":
                     flags=cv2.cv.CV_HAAR_SCALE_IMAGE
                 )
                 for face in faces:
-		    print "face found"
                     (x1, y1, w1, h1) = face
                     x, y, w, h = bounding_box
                     cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
@@ -151,7 +144,6 @@ if __name__ == "__main__":
                 cv2.imshow('Face detection', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-            raw_capture.truncate(0)
     except KeyboardInterrupt:
         pass
     # When everything is done, release the capture
