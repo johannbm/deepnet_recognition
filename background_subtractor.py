@@ -76,6 +76,8 @@ class BackgroundExtractor:
             #update background model if noe faces found
             if len(faces) == 0 and self.is_dynamic:
                 self.accumulate_background()
+            else:
+                print "face detected"
             
             bounding_boxes.extend(self.get_face_bounds(faces, bounding_box))
             
@@ -120,6 +122,8 @@ if __name__ == "__main__":
 
             potentialAreas = bgsub.getPotentialRegions(frame)
 
+            face_locations = bgsub.getBoundingBox(frame)
+
             if debug:
                 regions = bgsub.getBoundingBox(frame)
                 for x,y,w,h in regions:
@@ -129,22 +133,22 @@ if __name__ == "__main__":
 
 
 
-            all_faces = []
-            for area, bounding_box in potentialAreas:
-                faces = face_cascade.detectMultiScale(
-                    area,
-                    scaleFactor=1.1,
-                    minNeighbors=5,
-                    minSize=(30, 30),
-                    flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-                )
-                if conf["show_video"]["detection"]:
-                    for face in faces:
-                        (x1, y1, w1, h1) = face
-                        x, y, w, h = bounding_box
-                        cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
-                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-                    cv2.imshow('Face detection', frame)
+            # all_faces = []
+            # for area, bounding_box in potentialAreas:
+            #     faces = face_cascade.detectMultiScale(
+            #         area,
+            #         scaleFactor=1.1,
+            #         minNeighbors=5,
+            #         minSize=(30, 30),
+            #         flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+            #     )
+            #     if conf["show_video"]["detection"]:
+            #         for face in faces:
+            #             (x1, y1, w1, h1) = face
+            #             x, y, w, h = bounding_box
+            #             cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
+            #             cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
+            cv2.imshow('Face detection', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     except KeyboardInterrupt:
