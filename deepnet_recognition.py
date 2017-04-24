@@ -32,7 +32,7 @@ path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfr
 
 conf = json.load(open(path_to_file + '/conf.json'))
 
-camera = VideoStream(conf["use_rpi_camera"] > 0).start()
+camera = VideoStream(usePiCamera=conf["use_rpi_camera"] > 0).start()
 time.sleep(conf["camera_warmup_time"])
 
 # Load a sample picture and learn how to recognize it.
@@ -119,6 +119,27 @@ def update_detection_list(index):
     detection_index = (detection_index + 1) % conf["consecutive_detections"]
 
 
+def draw_eyes(landmarks, frame):
+    for landmark in landmarks:
+        left_eye = landmark['left_eye']
+        right_eye = landmark['right_eye']
+        draw_eye(frame, left_eye)
+        draw_eye(frame, right_eye)
+
+
+def draw_landmarks(landmarks, frame, radius=1, color=(0,255,100,255)):
+    for landmark in landmarks:
+        for location in landmark:
+            for point in landmark[location]:
+                cv2.circle(frame, point, radius, color)
+
+def draw_eye(frame, eye_marks, width=1, fill=(0, 0, 255, 255)):
+    eyelines_tuples = [(0,1), (2,3), (4,3), (0,-1), (1,-1), (2,-2)]
+    for x,y in eyelines_tuples:
+        cv2.line(frame, eye_marks[x], eye_marks[y], color=fill, thickness=width)
+
+
+
 def check_login():
     global recent_detections, current_user
     if recent_detections[0] != -1 and recent_detections[1:] == recent_detections[:-1] and current_user != recent_detections[0]:
@@ -147,7 +168,12 @@ while True:
         face_locations = get_face_locations(frame)
         face_encodings = get_face_encoding(frame, face_locations)
         landmarks = get_facial_landmarks(frame, face_locations)
-        print landmarks
+
+        if conf["show_video"]["landmarks"]:
+            landmarks_frame = frame.copy()
+            draw_eyes(landmarks, landmarks_frame)
+            draw_landmarks(landmarks, landmarks_frame)
+            cv2.imshow("Landmarks", landmarks_frame)
 
         face_names = []
         for face_encoding in face_encodings:
@@ -183,11 +209,8 @@ while True:
         # Display the resulting image
         cv2.imshow('Video', frame)
 
-        # Hit 'q' on the keyboard to quit!
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    # Hit 'q' on the keyboard to quit!
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
     else:
         print performance_stats
-# Release handle to the webcam
-#video_capture.release()
-#cv2.destroyAllWindows()
