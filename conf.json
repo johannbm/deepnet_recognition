@@ -1,5 +1,5 @@
 {
-	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":true},
+	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":false},
 	"camera_warmup_time": 2,
 	"delta_thresh": 5,
 	"min_area": 500,
@@ -11,5 +11,5 @@
 	"logout_time":5,
 	"capture_device":0,
 	"consecutive_detections": 5,
-	"use_rpi_camera": false
+	"use_rpi_camera": true
 }

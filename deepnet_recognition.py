@@ -32,7 +32,7 @@ path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfr
 
 conf = json.load(open(path_to_file + '/conf.json'))
 
-camera = VideoStream(usePiCamera=True > 0).start()
+camera = VideoStream(conf["use_rpi_camera"] > 0).start()
 time.sleep(conf["camera_warmup_time"])
 
 # Load a sample picture and learn how to recognize it.
@@ -102,6 +102,17 @@ def get_face_match(faces, face_encoding, debug=True):
     return match
 
 
+def get_facial_landmarks(face, location, debug=True):
+    time_start = time.time()
+    landmarks = face_recognition.face_landmarks(face, location)
+
+    if debug:
+        time_end = time.time()
+        performance_stats["Landmarks"] = time_end-time_start
+
+    return landmarks
+
+
 def update_detection_list(index):
     global detection_index
     recent_detections[detection_index] = index
@@ -135,6 +146,8 @@ while True:
     if process_this_frame:
         face_locations = get_face_locations(frame)
         face_encodings = get_face_encoding(frame, face_locations)
+        landmarks = get_facial_landmarks(frame, face_locations)
+        print landmarks
 
         face_names = []
         for face_encoding in face_encodings:
@@ -174,7 +187,7 @@ while True:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     else:
-	print performance_stats
+        print performance_stats
 # Release handle to the webcam
 #video_capture.release()
 #cv2.destroyAllWindows()
