@@ -82,13 +82,13 @@ def get_face_encoding(frame, face_locations, debug=True):
 
 def get_face_locations(frame, debug=True):
     time_start = time.time()
-    face_locations = get_face_locations_bgsub(frame)
+    face_areas = get_face_locations_bgsub(frame)
 
     if debug:
         time_end = time.time()
         performance_stats["Detection"] = time_end-time_start
-
-    return face_locations
+    print face_areas
+    return face_areas
 
 
 def get_face_match(faces, face_encoding, debug=True):
@@ -122,7 +122,7 @@ def check_logout():
         recent_detections = [-1]*conf["consecutive_detections"]
         current_user = None
 
-
+print "Init recognition"
 while True:
     # Grab a single frame of video
     frame = camera.read()
@@ -149,7 +149,7 @@ while True:
 
             update_detection_list(index)
             face_names.append(conf["users"][index])
-            
+        print face_names    
         check_login()
         check_logout()
 
@@ -173,7 +173,8 @@ while True:
         # Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
+    else:
+	print performance_stats
 # Release handle to the webcam
 #video_capture.release()
 #cv2.destroyAllWindows()
