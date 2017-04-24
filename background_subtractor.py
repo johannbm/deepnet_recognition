@@ -76,9 +76,7 @@ class BackgroundExtractor:
             #update background model if noe faces found
             if len(faces) == 0 and self.is_dynamic:
                 self.accumulate_background()
-            else:
-                print "face detected"
-            
+
             bounding_boxes.extend(self.get_face_bounds(faces, bounding_box))
             
         return bounding_boxes
