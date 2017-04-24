@@ -151,6 +151,23 @@ class DeepNetRecognizer:
             self.reset_recognized_faces()
             self.current_user = None
 
+    def show_recognized_face(self, image_frame, face_locations, face_names):
+        frame = image_frame.copy()
+        for (top, right, bottom, left), name in zip(face_locations, face_names):
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+
+            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), -1)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(frame, name[0], (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+            font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+            # cv2.putText(frame, "Detection: " + str(round(performance_stats["Detection"], 5)), (10, 20), font, 1.0, (255, 255, 255), 1)
+            # cv2.putText(frame, "Encoding: " + str(round(performance_stats["Encoding"], 5)), (10, 40), font, 1.0, (255, 255, 255), 1)
+            # cv2.putText(frame, "Matching: " + str(round(performance_stats["Matching"], 5)), (10, 60), font, 1.0, (255, 255, 255), 1)
+
+        # Display the resulting image
+        cv2.imshow('Video', frame)
+
+
 
 
 
