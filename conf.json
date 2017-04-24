@@ -10,5 +10,6 @@
 	"detection_interval": 2,
 	"logout_time":5,
 	"capture_device":0,
-	"consecutive_detections": 5
+	"consecutive_detections": 5,
+	"use_rpi_camera": false
 }

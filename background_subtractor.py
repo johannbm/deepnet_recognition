@@ -86,8 +86,6 @@ class BackgroundExtractor:
     def accumulate_background(self):
         if time.time()-self.previous_positive_detection > self.negative_seconds_limit:
             cv2.accumulateWeighted(self.current_frame, self.avg, 0.01)
-            #print "updating"
-            #self.avg = self.current_frame
 
 
     def get_face_bounds(self, faces, bounding_box):
@@ -109,7 +107,7 @@ if __name__ == "__main__":
     conf = json.load(open('conf.json'))
     path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-    video_capture = VideoStream(usePiCamera=False > 0).start()
+    video_capture = VideoStream(usePiCamera=conf["use_rpi_camera"] > 0).start()
     time.sleep(2.0)
 
     bgsub = BackgroundExtractor(video_capture.read(), conf, path_to_file)
@@ -120,37 +118,37 @@ if __name__ == "__main__":
             frame = video_capture.read()
             frame = imutils.resize(frame, width=500)
 
-            potentialAreas = bgsub.getPotentialRegions(frame)
+            #potentialAreas = bgsub.getPotentialRegions(frame)
 
-            face_locations = bgsub.getBoundingBox(frame)
+            #face_locations = bgsub.getBoundingBox(frame)
 
-            if debug:
-                regions = bgsub.getBoundingBox(frame)
-                for x,y,w,h in regions:
-                    cv2.rectangle(frame, (h, x), (y, w), (100, 0, 100), 2)
+            regions = bgsub.getBoundingBox(frame)
+            for x,y,w,h in regions:
+                cv2.rectangle(frame, (h, x), (y, w), (100, 0, 100), 2)
 
-                print "negative frames count: " + str(time.time()-bgsub.previous_positive_detection)
+            print "negative frames count: " + str(time.time()-bgsub.previous_positive_detection)
+
+            if conf["show_video"]["detection"]:
+                cv2.imshow('Face detection', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
 
 
-
-            # all_faces = []
-            # for area, bounding_box in potentialAreas:
-            #     faces = face_cascade.detectMultiScale(
-            #         area,
-            #         scaleFactor=1.1,
-            #         minNeighbors=5,
-            #         minSize=(30, 30),
-            #         flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-            #     )
-            #     if conf["show_video"]["detection"]:
-            #         for face in faces:
-            #             (x1, y1, w1, h1) = face
-            #             x, y, w, h = bounding_box
-            #             cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
-            #             cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-            cv2.imshow('Face detection', frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+                    # all_faces = []
+                    # for area, bounding_box in potentialAreas:
+                    #     faces = face_cascade.detectMultiScale(
+                    #         area,
+                    #         scaleFactor=1.1,
+                    #         minNeighbors=5,
+                    #         minSize=(30, 30),
+                    #         flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+                    #     )
+                    #     if conf["show_video"]["detection"]:
+                    #         for face in faces:
+                    #             (x1, y1, w1, h1) = face
+                    #             x, y, w, h = bounding_box
+                    #             cv2.rectangle(frame, (x+x1, y+y1), (x+x1 + w1, y+y1 + h1), (0, 255, 0), 2)
+                    #             cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
     except KeyboardInterrupt:
         pass
 
