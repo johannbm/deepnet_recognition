@@ -1,0 +1,25 @@
+// users list
+// 1 : ingunn
+// 2 : jarle
+// 3 : emil
+// 4 : eirik
+// 5 : jonathan
+
+{
+	"000":
+		{"login": 100, "logout":380, "user":4},
+	"001":
+		{"login": 50, "logout":250, "user":5},
+	"002_1":
+		{"login": 40, "logout":180, "user":3},
+	"002_2":
+		{"login": 65, "logout":260, "user":4},
+    "003":
+      {"login": 60, "logout":290, "user":3},
+    "007":
+      {"login":60, "logout":250, "user":1},
+    "008":
+      {"login":75, "logout":385, "user":1},
+    "009":
+      {"login":80, "logout":360, "user":2}
+}

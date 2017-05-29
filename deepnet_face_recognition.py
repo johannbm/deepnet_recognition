@@ -4,6 +4,8 @@ import os
 import inspect
 import time
 import nodejs_input
+import mirror_messenger
+
 
 class DeepNetRecognizer:
 
@@ -21,7 +23,7 @@ class DeepNetRecognizer:
         self.recent_faces_recognized = []
         self.reset_recognized_faces()
         self.performance_stats = {}
-
+        self.messenger = mirror_messenger.MirrorMessenger()
 
     def reset_recognized_faces(self):
         self.recent_faces_recognized = [-1] * self.consecutive_detection_limit
@@ -33,7 +35,7 @@ class DeepNetRecognizer:
         :return: list of encodings
         """
         images = [fr.load_image_file(os.path.join(image_folder, image)) for image in os.listdir(image_folder)]
-        return [fr.face_encodings(encoding) for encoding in images]
+        return [fr.face_encodings(encoding)[0] for encoding in images]
 
     def initialize_face_names(self, image_folder):
         """
@@ -69,7 +71,6 @@ class DeepNetRecognizer:
         """
         time_start = time.time()
         match = fr.compare_faces(self.known_face_encodings, new_encoding)
-
         if debug:
             time_end = time.time()
             self.performance_stats["Matching"] = time_end - time_start
@@ -79,7 +80,7 @@ class DeepNetRecognizer:
     def get_corresponding_user(self, match_list):
         """
         looks up the names corresponding to the given list of matches
-        :param match_list: a boolean list indicating the indexes of found faes
+        :param match_list: a boolean list indicating the indexes of found faces
         :return: a list of (name, index) tuples
         """
         names = []
@@ -90,6 +91,16 @@ class DeepNetRecognizer:
         if len(names) == 0:
             names.append(("Unknown", -1))
         return names
+
+    def get_corresponding_index(self, match_list):
+        """
+        looks up the names corresponding to the given list of matches
+        :param match_list: a boolean list indicating the indexes of found faces
+        :return: a list of match_list indexes that were true (1-indexed)
+        """
+        indexes = [i+1 for i in range(len(match_list)) if match_list[i]]
+        return indexes if len(indexes) > 0 else [-1]
+
 
     def recognize_face(self, frame, face_locations):
         """
@@ -102,7 +113,7 @@ class DeepNetRecognizer:
         users = []
         for new_encoding in new_encodings:
             match_list = self.compare_face(new_encoding)
-            users.extend(self.get_corresponding_user(match_list))
+            users.extend(self.get_corresponding_index(match_list))
         return users
 
     def are_all_elements_equal(self, l):
@@ -122,50 +133,6 @@ class DeepNetRecognizer:
         self.recent_faces_recognized[self.detection_index] = index
         self.detection_index = (self.detection_index + 1) % self.consecutive_detection_limit
         self.time_since_face_recognized = time.time()
-
-    def check_login(self):
-        """
-        checks if the conditions for a login-event are met, if so, sends login-event to nodeJS
-        conditions:
-            1. list of recently detected faces must be same for all elements
-            2. the new user to login must differ from user already logged in
-            3. list of recently detected faces must be full
-        :return: None
-        """
-        if (self.recent_faces_recognized[0] != -1 and
-                self.are_all_elements_equal(self.recent_faces_recognized) and
-                    self.current_user != self.recent_faces_recognized[0]):
-            self.current_user = self.recent_faces_recognized[0]
-            nodejs_input.to_node("login", {"user": self.current_user + 1})
-
-    def check_logout(self):
-        """
-        checks if the conditions for a logout-event are met, if so send logout-event to nodeJS
-        conditions:
-            1. the elapsed time from when the last face was recognized must be greater than self.logout_time
-            2. a user must be logged in
-        :return: None
-        """
-        if time.time() - self.time_since_face_recognized > self.logout_time and self.current_user is not None:
-            nodejs_input.to_node("logout", {"user": self.current_user + 1})
-            self.reset_recognized_faces()
-            self.current_user = None
-
-    def show_recognized_face(self, image_frame, face_locations, face_names):
-        frame = image_frame.copy()
-        for (top, right, bottom, left), name in zip(face_locations, face_names):
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), -1)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name[0], (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-            font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-            # cv2.putText(frame, "Detection: " + str(round(performance_stats["Detection"], 5)), (10, 20), font, 1.0, (255, 255, 255), 1)
-            # cv2.putText(frame, "Encoding: " + str(round(performance_stats["Encoding"], 5)), (10, 40), font, 1.0, (255, 255, 255), 1)
-            # cv2.putText(frame, "Matching: " + str(round(performance_stats["Matching"], 5)), (10, 60), font, 1.0, (255, 255, 255), 1)
-
-        # Display the resulting image
-        cv2.imshow('Video', frame)
 
 
 

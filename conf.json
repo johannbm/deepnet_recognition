@@ -1,5 +1,5 @@
 {
-	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":true, "landmarks":true},
+	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":true, "landmarks":false},
 	"camera_warmup_time": 2,
 	"delta_thresh": 5,
 	"min_area": 500,
