@@ -5,6 +5,7 @@ import json
 import os
 import inspect
 from imutils.video import VideoStream
+import face_recognition
 
 class BackgroundExtractor:
 
@@ -22,6 +23,7 @@ class BackgroundExtractor:
         self.show_feed = conf["show_video"]
         self.is_dynamic = conf["dynamic_background"]
         self.face_cascade = cv2.CascadeClassifier(os.path.join(path_to_file, conf["cascade_path"]))
+        self.performance_stats = {}
 
 
     def getPotentialRegions(self, frame):
@@ -49,7 +51,6 @@ class BackgroundExtractor:
                                      cv2.CHAIN_APPROX_SIMPLE)
 
         areas = [x for x in cnts if cv2.contourArea(x) > self.min_area]
-        
         cropped_images = []
         for a in areas:
             x, y, w, h = cv2.boundingRect(a)
@@ -61,18 +62,50 @@ class BackgroundExtractor:
 
         return cropped_images
 
+    def find_faces_haar(self, frame):
+        """
+        Returns bounding box of faces found using this instances haar-cascade
+        :param frame: image to analyze
+        :return: List of bounding box tuples (x, y, w, h)
+        """
+        start = time.time()
+        faces = self.face_cascade.detectMultiScale(
+            frame,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+        )
+        self.performance_stats["haar_detection"] = time.time() - start
+        return faces
+
+    def find_faces_dlib(self, frame):
+        """
+        Finds bounding box for faces using dlibs frontal face detector
+        :param frame: image to analyze
+        :return: List of bounding box tuples (x, y, w, h)
+        """
+        start = time.time()
+        faces = face_recognition.face_locations(frame)
+        self.performance_stats["dlib_detection"] = time.time() - start
+        opencv_faces = [self.convert_dlib_location_to_opencv(x) for x in faces]
+        return opencv_faces
+
+    def convert_dlib_location_to_opencv(self, location):
+        top, right, bottom, left = location
+        return left, top, right-left, bottom-top
+
+
     def getBoundingBox(self, frame):
         potentialAreas = self.getPotentialRegions(frame)
         bounding_boxes = []
 
         for area, bounding_box in potentialAreas:
-            faces = self.face_cascade.detectMultiScale(
-                area,
-                scaleFactor=1.1,
-                minNeighbors=5,
-                minSize=(30, 30),
-                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-            )
+            #faces = self.find_faces_haar(area)
+            faces = self.find_faces_dlib(area)
+            #print faces2
+            #print faces
+            print self.performance_stats
             #update background model if noe faces found
             if len(faces) == 0 and self.is_dynamic:
                 self.accumulate_background()

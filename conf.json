@@ -1,8 +1,8 @@
 {
-	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":true, "landmarks":false},
+	"show_video": {"average": false, "blur":false, "contour":true, "detection":true, "recognition":true, "landmarks":false},
 	"camera_warmup_time": 2,
 	"delta_thresh": 5,
-	"min_area": 500,
+	"min_area": 2000,
 	"dynamic_background": true,
 	"cascade_path": "cascades/lbpcascade_frontalface.xml",
 	"consecutive_negative_seconds_limit": 3,

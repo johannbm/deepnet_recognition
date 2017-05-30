@@ -26,6 +26,7 @@ def get_face_locations_bgsub(frame, bg_sub_model):
 def get_face_locations(frame, bg_sub_model, debug=True):
     time_start = time.time()
     face_areas = get_face_locations_bgsub(frame, bg_sub_model)
+    #face_areas = get_face_locations_dlib(frame)
 
     if debug:
         time_end = time.time()
@@ -43,9 +44,10 @@ dnr = user_recognizer.UserRecognizer(model)
 
 process_this_frame = True
 performance_stats = {}
+performance_stats["found_faces"] = 0
 
 
-def test_video(filename, bg_sub_model):
+def test_video(filename):
     cap = cv2.VideoCapture(filename)
     cap.set(6, 5)
     fps = 30
@@ -57,6 +59,7 @@ def test_video(filename, bg_sub_model):
     frame_counter = 0
     login_frames = []
     logout_frames = []
+    bg_sub_model = None
 
     success = True
 
@@ -75,6 +78,7 @@ def test_video(filename, bg_sub_model):
         # Only process every other frame of video to save time
         if process_this_frame:
             face_locations = get_face_locations(frame, bg_sub_model)
+            performance_stats["found_faces"] += len(face_locations)
             face_names = dnr.recognize_face(frame, face_locations)
             login = dnr.check_login()
             logout = dnr.check_logout()
@@ -98,9 +102,11 @@ def test_video(filename, bg_sub_model):
             break
 
         frame_counter += 1
-
+    print performance_stats
     return login_frames, logout_frames
 
+annotations = json.load(open(path_to_file + '/annotations.json'))
+#print annotations
 
-print test_video('../test_data/training_videos/002_2.mp4', None)
+print test_video('../test_data/training_videos/008.mp4')
 
