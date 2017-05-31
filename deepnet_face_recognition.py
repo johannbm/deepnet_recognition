@@ -22,11 +22,16 @@ class DeepNetRecognizer:
         self.current_user = None
         self.recent_faces_recognized = []
         self.reset_recognized_faces()
-        self.performance_stats = {}
+        self.performance_stats = {"Matching": [], "Facenet_encoding": []}
         self.messenger = mirror_messenger.MirrorMessenger()
 
     def reset_recognized_faces(self):
         self.recent_faces_recognized = [-1] * self.consecutive_detection_limit
+
+    def get_average_stats(self):
+        return {"Matching": sum(self.performance_stats["Matching"]) / float(len(self.performance_stats["Matching"])),
+                "Facenet_encoding": sum(self.performance_stats["Facenet_encoding"]) / float(len(self.performance_stats["Facenet_encoding"]))}
+
 
     def initialize_face_encoding(self, image_folder):
         """
@@ -34,7 +39,7 @@ class DeepNetRecognizer:
         :param image_folder: folder of images to encode
         :return: list of encodings
         """
-        images = [fr.load_image_file(os.path.join(image_folder, image)) for image in os.listdir(image_folder)]
+        images = [fr.load_image_file(os.path.join(image_folder, image)) for image in self.get_sorted_directory(image_folder)]
         return [fr.face_encodings(encoding)[0] for encoding in images]
 
     def initialize_face_names(self, image_folder):
@@ -43,7 +48,10 @@ class DeepNetRecognizer:
         :param image_folder: folder of images to encode
         :return: list of image names without extension
         """
-        return [os.path.splitext(image)[0] for image in os.listdir(image_folder)]
+        return [os.path.splitext(image)[0] for image in self.get_sorted_directory(image_folder)]
+
+    def get_sorted_directory(self, image_folder):
+        return sorted(os.listdir(image_folder))
 
     def encode_face(self, frame, face_locations, debug=True):
         """
@@ -58,7 +66,7 @@ class DeepNetRecognizer:
 
         if debug:
             time_end = time.time()
-            self.performance_stats["Encoding"] = time_end - time_start
+            self.performance_stats["Facenet_encoding"].append(time_end - time_start)
 
         return face_encodings
 
@@ -73,7 +81,7 @@ class DeepNetRecognizer:
         match = fr.compare_faces(self.known_face_encodings, new_encoding)
         if debug:
             time_end = time.time()
-            self.performance_stats["Matching"] = time_end - time_start
+            self.performance_stats["Matching"].append(time_end - time_start)
 
         return match
 

@@ -1,26 +1,50 @@
-import os
-import inspect
 import time
 import nodejs_input
 import mirror_messenger
 import cv2
+import deepnet_face_recognition
+import os
+import inspect
+import opencv_modules
 
 
 class UserRecognizer:
 
-    def __init__(self, face_recognizer):
-        self.face_recognizer = face_recognizer
+    def __init__(self, face_recognition_algorithm, conf):
+        self.algorithm = face_recognition_algorithm
+        self.face_recognizer = self.load_face_recognition_algorithm()
 
         self.time_since_face_recognized = 0
-        self.logout_time = 3
-        self.consecutive_detection_limit = 5
+        self.logout_time = conf["logout_time"]
+        self.consecutive_detection_limit = conf["consecutive_detections"]
         self.detection_index = 0
 
         self.current_user = None
         self.recent_faces_recognized = []
         self.reset_recognized_faces()
-        self.performance_stats = {}
         self.messenger = mirror_messenger.MirrorMessenger()
+
+    def load_face_recognition_algorithm(self):
+        if self.algorithm == 4:
+            path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+            model = deepnet_face_recognition.DeepNetRecognizer(path_to_file + "/images/")
+        else:
+            model = opencv_modules.FaceRecModel(algorithm=self.algorithm)
+        return model
+
+    @staticmethod
+    def get_algorithm_text(algorithm):
+        if algorithm == 1:
+            return "LBPH Classifier"
+        elif algorithm == 2:
+            return "Fisherface Classifier"
+        elif algorithm == 3:
+            return "Eigenface Classifier"
+        else:
+            return "Google Facenet"
+
+    def get_performance_stats(self):
+        return self.face_recognizer.get_average_stats()
 
     def reset_recognized_faces(self):
         self.recent_faces_recognized = [[-1]] * self.consecutive_detection_limit
@@ -33,15 +57,14 @@ class UserRecognizer:
         :return: a list of (name, index) tuples for the found faces
         """
         indexes = self.face_recognizer.recognize_face(frame, face_locations)
-        self.update_detection_list(indexes) #todo consider case where multiple indexes
+        self.update_detection_list(indexes)
 
         return indexes
-
 
     def update_detection_list(self, indexes):
         """
         updates the list and index of recent faces detected
-        :param index: list index to update
+        :param indexes: list indexes to update
         :return: None
         """
         if len(indexes) > 0:
@@ -58,7 +81,7 @@ class UserRecognizer:
             3. list of recently detected faces must be full
         :return: index of logged in user or False
         """
-        same_user, index = self.are_all_same_user(self.recent_faces_recognized)
+        same_user, index = self.are_all_same_user(self.recent_faces_recognized, self.consecutive_detection_limit)
 
         if same_user:
             if self.current_user is None and index > 0:
@@ -87,7 +110,13 @@ class UserRecognizer:
             self.current_user = None
         return user
 
-    def are_all_same_user(self, users):
+    def are_all_same_user(self, users, detection_limit):
+        """
+        Detects if the same user has been detected detection_limit amount of times in a row
+        :param users: A nested list of users indexes [[1, 2], [1]...]
+        :param detection_limit: number of consecutive detections for logint to trigger
+        :return: True or False
+        """
         user_count = {}
         for i in range(self.consecutive_detection_limit):
             for j in users[i]:
@@ -97,12 +126,10 @@ class UserRecognizer:
                     user_count[j] = 1
 
         for key in user_count.keys():
-            if user_count[key] == self.consecutive_detection_limit:
+            if user_count[key] == detection_limit:
                 return True, key
 
         return False, -1
-
-
 
     def are_all_elements_equal(self, l):
         """
@@ -116,15 +143,13 @@ class UserRecognizer:
         frame = image_frame.copy()
         for (top, right, bottom, left), name in zip(face_locations, face_names):
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), -1)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, str(name), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+            #cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), -1)
+            #font = cv2.FONT_HERSHEY_DUPLEX
             font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+            cv2.putText(frame, str(name), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
             # cv2.putText(frame, "Detection: " + str(round(performance_stats["Detection"], 5)), (10, 20), font, 1.0, (255, 255, 255), 1)
             # cv2.putText(frame, "Encoding: " + str(round(performance_stats["Encoding"], 5)), (10, 40), font, 1.0, (255, 255, 255), 1)
             # cv2.putText(frame, "Matching: " + str(round(performance_stats["Matching"], 5)), (10, 60), font, 1.0, (255, 255, 255), 1)
 
-        # Display the resulting image
         cv2.imshow('Video', frame)
 

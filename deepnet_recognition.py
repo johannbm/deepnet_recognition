@@ -36,7 +36,7 @@ def get_face_locations_dlib(frame):
 
 
 def get_face_locations_bgsub(frame):
-    return bg_sub_model.getBoundingBox(frame)
+    return bg_sub_model.get_bounding_box(frame)
 
 
 def get_face_locations(frame, debug=True):

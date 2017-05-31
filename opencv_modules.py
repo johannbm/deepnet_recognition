@@ -1,5 +1,7 @@
 import cv2
 import os
+import time
+
 
 class FaceRecModel:
 
@@ -11,6 +13,7 @@ class FaceRecModel:
         self.load()
         self.FACE_WIDTH = 92
         self.FACE_HEIGHT = 112
+        self.performance_stats = {"Matching": []}
 
     def load(self):
 
@@ -26,7 +29,11 @@ class FaceRecModel:
 
         self.model.load(os.path.join(self.training_file_dir, self.training_file))
 
+    def get_average_stats(self):
+        return {"Matching": sum(self.performance_stats["Matching"]) / float(len(self.performance_stats["Matching"]))}
+
     def recognize_face(self, frame, locations):
+        start_time = time.time()
         names = []
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         for location in locations:
@@ -40,6 +47,7 @@ class FaceRecModel:
             label, confidence = self.model.predict(crop)
             names.append(label)
 
+        self.performance_stats["Matching"].append(time.time() - start_time)
         return names
 
     def convert_dlib_location_to_opencv(self, location):

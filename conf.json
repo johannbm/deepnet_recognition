@@ -4,12 +4,15 @@
 	"delta_thresh": 5,
 	"min_area": 2000,
 	"dynamic_background": true,
-	"cascade_path": "cascades/lbpcascade_frontalface.xml",
+	"lbp_cascade_path": "cascades/lbpcascade_frontalface.xml",
+	"haar_cascade_path": "cascades/haarcascade_frontalface_default.xml",
 	"consecutive_negative_seconds_limit": 3,
 	"users": ["Johannes", "Ingunn", "Mathias", "Jessie"],
 	"detection_interval": 2,
 	"logout_time":5,
 	"capture_device":0,
 	"consecutive_detections": 5,
+	"detection_algorithm": 2,
+	"recognition_algorithm": 1,
 	"use_rpi_camera": false
 }
