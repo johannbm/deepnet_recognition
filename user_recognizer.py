@@ -12,7 +12,7 @@ class UserRecognizer:
 
     def __init__(self, face_recognition_algorithm, conf):
         self.algorithm = face_recognition_algorithm
-        self.face_recognizer = self.load_face_recognition_algorithm()
+        self.face_recognizer = self.load_face_recognition_algorithm(conf)
 
         self.time_since_face_recognized = 0
         self.logout_time = conf["logout_time"]
@@ -24,22 +24,23 @@ class UserRecognizer:
         self.reset_recognized_faces()
         self.messenger = mirror_messenger.MirrorMessenger()
 
-    def load_face_recognition_algorithm(self):
+    def load_face_recognition_algorithm(self, conf):
         if self.algorithm == 4:
             path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-            model = deepnet_face_recognition.DeepNetRecognizer(path_to_file + "/images/")
+            model = deepnet_face_recognition.DeepNetRecognizer(path_to_file + "/images/", conf)
         else:
             model = opencv_modules.FaceRecModel(algorithm=self.algorithm)
         return model
 
     @staticmethod
     def get_algorithm_text(algorithm):
+        threshold = opencv_modules.FaceRecModel.get_threshold(algorithm)
         if algorithm == 1:
-            return "LBPH Classifier"
+            return "LBPH Classifier     Threshold: {0}".format(threshold)
         elif algorithm == 2:
-            return "Fisherface Classifier"
+            return "Fisherface Classifier     Threshold: {0}".format(threshold)
         elif algorithm == 3:
-            return "Eigenface Classifier"
+            return "Eigenface Classifier     Threshold: {0}".format(threshold)
         else:
             return "Google Facenet"
 

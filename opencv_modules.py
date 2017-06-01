@@ -15,16 +15,25 @@ class FaceRecModel:
         self.FACE_HEIGHT = 112
         self.performance_stats = {"Matching": []}
 
-    def load(self):
+    @staticmethod
+    def get_threshold(algorithm):
+        if algorithm == 1:
+            return 110
+        elif algorithm == 2:
+            return 600
+        else:
+            return 3000
 
+    def load(self):
+        threshold = self.get_threshold(self.algorithm)
         if self.algorithm == 1:
-            self.model = cv2.createLBPHFaceRecognizer(threshold=80)
+            self.model = cv2.createLBPHFaceRecognizer(threshold=threshold)
             self.training_file = "training_lbp.xml"
         elif self.algorithm == 2:
-            self.model = cv2.createFisherFaceRecognizer(threshold=250)
+            self.model = cv2.createFisherFaceRecognizer(threshold=threshold)
             self.training_file = "training_fisher.xml"
         else:
-            self.model = cv2.createEigenFaceRecognizer(threshold=3000)
+            self.model = cv2.createEigenFaceRecognizer(threshold=threshold)
             self.training_file = "training_eigen.xml"
 
         self.model.load(os.path.join(self.training_file_dir, self.training_file))

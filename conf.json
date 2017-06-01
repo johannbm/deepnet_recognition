@@ -1,18 +1,19 @@
 {
-	"show_video": {"average": false, "blur":false, "contour":true, "detection":true, "recognition":true, "landmarks":false},
+	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":true, "landmarks":false},
 	"camera_warmup_time": 2,
-	"delta_thresh": 5,
+	"motion_threshold": 15,
 	"min_area": 2000,
 	"dynamic_background": true,
 	"lbp_cascade_path": "cascades/lbpcascade_frontalface.xml",
 	"haar_cascade_path": "cascades/haarcascade_frontalface_default.xml",
 	"consecutive_negative_seconds_limit": 3,
-	"users": ["Johannes", "Ingunn", "Mathias", "Jessie"],
+	"users": ["Ingunn", "Jarle", "Emil", "Eirik", "Jonathan", "Jessie", "Johannes", "Mathias", "Somedude", "Somechick"],
 	"detection_interval": 2,
 	"logout_time":5,
 	"capture_device":0,
 	"consecutive_detections": 5,
 	"detection_algorithm": 2,
-	"recognition_algorithm": 1,
+	"recognition_algorithm": 4,
+	"num_faces": 7,
 	"use_rpi_camera": false
 }

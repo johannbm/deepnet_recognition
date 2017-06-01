@@ -1,37 +1,24 @@
 import face_recognition as fr
-import cv2
 import os
 import inspect
 import time
-import nodejs_input
 import mirror_messenger
 
 
 class DeepNetRecognizer:
 
-    def __init__(self, image_folder):
-        self.known_face_encodings = self.initialize_face_encoding(image_folder)
-        self.known_face_names = self.initialize_face_names(image_folder)
+    def __init__(self, image_folder, conf):
+        self.number_of_faces = conf["num_faces"]
+
+        self.known_face_encodings, self.known_face_names = self.initialize_face_encoding(image_folder)
         self.this_script_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-        self.time_since_face_recognized = 0
-        self.logout_time = 3
-        self.consecutive_detection_limit = 5
-        self.detection_index = 0
-
-        self.current_user = None
-        self.recent_faces_recognized = []
-        self.reset_recognized_faces()
         self.performance_stats = {"Matching": [], "Facenet_encoding": []}
         self.messenger = mirror_messenger.MirrorMessenger()
-
-    def reset_recognized_faces(self):
-        self.recent_faces_recognized = [-1] * self.consecutive_detection_limit
 
     def get_average_stats(self):
         return {"Matching": sum(self.performance_stats["Matching"]) / float(len(self.performance_stats["Matching"])),
                 "Facenet_encoding": sum(self.performance_stats["Facenet_encoding"]) / float(len(self.performance_stats["Facenet_encoding"]))}
-
 
     def initialize_face_encoding(self, image_folder):
         """
@@ -39,8 +26,16 @@ class DeepNetRecognizer:
         :param image_folder: folder of images to encode
         :return: list of encodings
         """
-        images = [fr.load_image_file(os.path.join(image_folder, image)) for image in self.get_sorted_directory(image_folder)]
-        return [fr.face_encodings(encoding)[0] for encoding in images]
+        images = []
+        names = []
+        for directory in self.get_sorted_directory(image_folder):
+            dir_path = os.path.join(image_folder, directory)
+            name = os.path.splitext(dir_path)[0]
+            person_images = self.get_sorted_directory(dir_path)
+            for i in range(self.number_of_faces):
+                images.append(fr.load_image_file(os.path.join(dir_path, person_images[i])))
+                names.append(name)
+        return [fr.face_encodings(encoding)[0] for encoding in images], names
 
     def initialize_face_names(self, image_folder):
         """
@@ -95,7 +90,6 @@ class DeepNetRecognizer:
         for i in range(len(match_list)):
             if match_list[i]:
                 names.append((self.known_face_names[i], i))
-                self.update_detection_list(i)
         if len(names) == 0:
             names.append(("Unknown", -1))
         return names
@@ -106,9 +100,12 @@ class DeepNetRecognizer:
         :param match_list: a boolean list indicating the indexes of found faces
         :return: a list of match_list indexes that were true (1-indexed)
         """
-        indexes = [i+1 for i in range(len(match_list)) if match_list[i]]
-        return indexes if len(indexes) > 0 else [-1]
+        indexes = [(i//self.number_of_faces)+1 for i in range(len(match_list)) if match_list[i]]
 
+        return [self.most_common(indexes)] if len(indexes) > 0 else [-1]
+
+    def most_common(self, lst):
+        return max(set(lst), key=lst.count)
 
     def recognize_face(self, frame, face_locations):
         """
@@ -123,24 +120,6 @@ class DeepNetRecognizer:
             match_list = self.compare_face(new_encoding)
             users.extend(self.get_corresponding_index(match_list))
         return users
-
-    def are_all_elements_equal(self, l):
-        """
-        checks if all elements in the list are equal
-        :param l: list to check
-        :return: True if all elements are equal, otherwise False
-        """
-        return l[1:] == l[:-1]
-
-    def update_detection_list(self, index):
-        """
-        updates the list and index of recent faces detected
-        :param index: list index to update
-        :return: None
-        """
-        self.recent_faces_recognized[self.detection_index] = index
-        self.detection_index = (self.detection_index + 1) % self.consecutive_detection_limit
-        self.time_since_face_recognized = time.time()
 
 
 

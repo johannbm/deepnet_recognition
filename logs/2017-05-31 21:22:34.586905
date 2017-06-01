@@ -1,0 +1,15 @@
+-------------------- Configurations --------------------
+Detection algorithm: LBP Cascade
+Recognition algorithm: Fisherface Classifier     Threshold: 600
+Consecutive detection limit: 5
+-------------------- Scores --------------------
+Average login delay 27.75
+Total incorrects 5
+Total premature logins 0
+Total takeovers 0
+Total no-logins 0
+Total tests done 12.0
+-------------------- Time Stats --------------------
+Detection average time: 0.00996568178433
+Matching average time: 0.000333601133987
+Total running time: 255.425991058

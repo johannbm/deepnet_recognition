@@ -2,7 +2,6 @@ import cv2
 import time
 import os
 import face_recognition
-from non_max_suppression import non_max_suppression
 
 
 class BackgroundExtractor:
@@ -23,7 +22,7 @@ class BackgroundExtractor:
 
         self.avg = gray.copy().astype("float")
         self.current_frame = self.avg
-        self.motion_threshold = 15
+        self.motion_threshold = conf["motion_threshold"]
 
         self.face_detection_method = None
         self.face_cascade = None
