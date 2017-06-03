@@ -34,7 +34,7 @@ class BackgroundExtractor:
         self.min_area = conf["min_area"]
         self.show_feed = conf["show_video"]
         self.is_dynamic = conf["dynamic_background"]
-        self.performance_stats = {"Detection": []}
+        self.performance_stats = {"Detection": [], "Total_detection_time": []}
 
     def load_face_detection_algorithm(self, algorithm, path_to_file, conf):
         """
@@ -68,7 +68,8 @@ class BackgroundExtractor:
             return "Haar Cascade"
 
     def get_performance_stats(self):
-        return {"Detection": sum(self.performance_stats["Detection"]) / float(len(self.performance_stats["Detection"]))}
+        return {"Detection": sum(self.performance_stats["Detection"]) / float(len(self.performance_stats["Detection"])),
+                "Total_detection": sum(self.performance_stats["Total_detection_time"]) / float(len(self.performance_stats["Total_detection_time"]))}
 
 
     def get_potential_regions(self, frame):
@@ -158,6 +159,7 @@ class BackgroundExtractor:
         :param frame: image to analyze for faces
         :return: List of bounding boxes in (x, y, w, h)
         """
+        start_time = time.time()
         potential_areas = self.get_potential_regions(frame)
         bounding_boxes = []
 
@@ -172,7 +174,8 @@ class BackgroundExtractor:
                 self.accumulate_background()
 
             bounding_boxes.extend(self.get_face_bounds(faces, bounding_box))
-            
+
+        self.performance_stats["Total_detection_time"].append(time.time() - start_time)
         return bounding_boxes
 
     def accumulate_background(self):
