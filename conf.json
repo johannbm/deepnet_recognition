@@ -13,7 +13,7 @@
 	"capture_device":0,
 	"consecutive_detections": 5,
 	"detection_algorithm": 2,
-	"recognition_algorithm": 4,
+	"recognition_algorithm": 2,
 	"num_faces": 7,
 	"use_rpi_camera": false
 }
