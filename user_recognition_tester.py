@@ -7,9 +7,9 @@ import numpy as np
 import cv2
 from datetime import datetime
 import imutils
-import sys
 import background_subtractor as bgsub
 import user_recognizer
+import utility
 
 path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 conf = json.load(open(path_to_file + '/conf.json'))
@@ -53,6 +53,8 @@ def test_video(filename):
     bg_sub_model = None
 
     process_this_frame = True
+    image_read_times = []
+    visualization_times = []
     #performance_stats["found_faces"] = 0
 
     success = True
@@ -62,6 +64,7 @@ def test_video(filename):
     while success:
         start_time = time.time()
         success, frame = cap.read()
+        image_read_times.append(time.time() - start_time)
 
         if not success:
             continue
@@ -85,8 +88,7 @@ def test_video(filename):
         if conf["show_video"]["recognition"]:
             s1 = time.time()
             dnr.show_recognized_face(frame, face_locations, get_names(face_names))
-            if debug:
-                print "Visualization time {0}".format(time.time() - s1)
+            visualization_times.append(time.time() - s1)
         process_this_frame = not process_this_frame
         execution_time = time.time() - start_time
         if limit_fps:
@@ -101,6 +103,9 @@ def test_video(filename):
         print dnr.get_performance_stats()
         print "Total time passed: {0}".format(time.time() - first_time)
         print "Average time spent per frame {0}".format((time.time() - first_time)/frame_counter)
+        print "Image read time: {0}".format(utility.list_avg(image_read_times))
+        print "Visualization time: {0}".format(utility.list_avg(visualization_times))
+
     accumulate_performance_stats(bg_sub_model.get_performance_stats())
     accumulate_performance_stats(dnr.get_performance_stats())
     return {"logins": login_frames, "logouts": logout_frames}

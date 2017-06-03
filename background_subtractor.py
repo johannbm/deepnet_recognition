@@ -2,6 +2,7 @@ import cv2
 import time
 import os
 import face_recognition
+import utility
 
 
 class BackgroundExtractor:
@@ -68,9 +69,8 @@ class BackgroundExtractor:
             return "Haar Cascade"
 
     def get_performance_stats(self):
-        return {"Detection": sum(self.performance_stats["Detection"]) / float(len(self.performance_stats["Detection"])),
-                "Total_detection": sum(self.performance_stats["Total_detection_time"]) / float(len(self.performance_stats["Total_detection_time"]))}
-
+        return {"Detection": utility.list_avg(self.performance_stats["Detection"]),
+                "Total_detection": utility.list_avg(self.performance_stats["Total_detection_time"])}
 
     def get_potential_regions(self, frame):
         """

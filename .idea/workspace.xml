@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c960c0e6-b2a9-4103-9a96-1ea5eb20f54d" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utility.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/background_subtractor.py" afterPath="$PROJECT_DIR$/background_subtractor.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/user_recognition_tester.py" afterPath="$PROJECT_DIR$/user_recognition_tester.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +23,8 @@
       <file leaf-file-name="deepnet_recognition.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/deepnet_recognition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="38" column="24" lean-forward="false" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
+            <state relative-caret-position="360">
+              <caret line="87" column="0" lean-forward="true" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -29,11 +32,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="user_recognition_tester.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="user_recognition_tester.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/user_recognition_tester.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="882">
-              <caret line="103" column="61" lean-forward="true" selection-start-line="103" selection-start-column="46" selection-end-line="103" selection-end-column="67" />
+            <state relative-caret-position="735">
+              <caret line="107" column="0" lean-forward="true" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -41,15 +44,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="background_subtractor.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utility.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utility.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="background_subtractor.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background_subtractor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="36" column="77" lean-forward="false" selection-start-line="36" selection-start-column="77" selection-end-line="36" selection-end-column="77" />
+            <state relative-caret-position="769">
+              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding>
-                <element signature="e#5980#6264#0" expanded="false" />
-                <element signature="e#7612#8346#0" expanded="false" />
-                <element signature="e#8349#10384#1" expanded="false" />
+                <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#5909#6193#0" expanded="false" />
+                <element signature="e#7541#8275#0" expanded="false" />
+                <element signature="e#8278#10313#1" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -148,7 +162,6 @@
         <option value="$PROJECT_DIR$/messenger_test.py" />
         <option value="$PROJECT_DIR$/face_landmarks.py" />
         <option value="$PROJECT_DIR$/face_recognition_models.py" />
-        <option value="$PROJECT_DIR$/deepnet_recognition.py" />
         <option value="$PROJECT_DIR$/non_max_suppression.py" />
         <option value="$PROJECT_DIR$/shadow_tester.py" />
         <option value="$PROJECT_DIR$/deepnet_face_recognition.py" />
@@ -157,6 +170,8 @@
         <option value="$PROJECT_DIR$/opencv_modules.py" />
         <option value="$PROJECT_DIR$/annotations.json" />
         <option value="$PROJECT_DIR$/conf.json" />
+        <option value="$PROJECT_DIR$/deepnet_recognition.py" />
+        <option value="$PROJECT_DIR$/utility.py" />
         <option value="$PROJECT_DIR$/user_recognition_tester.py" />
         <option value="$PROJECT_DIR$/background_subtractor.py" />
       </list>
@@ -386,14 +401,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/conf.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="123" lean-forward="false" selection-start-line="1" selection-start-column="123" selection-end-line="1" selection-end-column="123" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/deepnet_face_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1314">
@@ -417,10 +424,10 @@
         <state relative-caret-position="306">
           <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
-            <element signature="e#0#10#0" expanded="false" />
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -466,10 +473,10 @@
         <state relative-caret-position="306">
           <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
-            <element signature="e#0#10#0" expanded="false" />
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -514,10 +521,10 @@
         <state relative-caret-position="306">
           <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
-            <element signature="e#0#10#0" expanded="false" />
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -551,10 +558,10 @@
         <state relative-caret-position="2106">
           <caret line="123" column="35" lean-forward="false" selection-start-line="123" selection-start-column="35" selection-end-line="123" selection-end-column="35" />
           <folding>
-            <element signature="e#0#10#0" expanded="false" />
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -605,10 +612,10 @@
         <state relative-caret-position="2106">
           <caret line="123" column="35" lean-forward="true" selection-start-line="123" selection-start-column="35" selection-end-line="123" selection-end-column="35" />
           <folding>
-            <element signature="e#0#10#0" expanded="false" />
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -659,10 +666,10 @@
         <state relative-caret-position="1638">
           <caret line="109" column="4" lean-forward="false" selection-start-line="109" selection-start-column="4" selection-end-line="109" selection-end-column="62" />
           <folding>
-            <element signature="e#0#10#0" expanded="false" />
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -781,16 +788,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/deepnet_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="38" column="24" lean-forward="false" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/annotations.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="774">
@@ -807,24 +804,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/user_recognition_tester.py">
+    <entry file="file://$PROJECT_DIR$/deepnet_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="103" column="61" lean-forward="true" selection-start-line="103" selection-start-column="46" selection-end-line="103" selection-end-column="67" />
+        <state relative-caret-position="360">
+          <caret line="87" column="0" lean-forward="true" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utility.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/background_subtractor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="36" column="77" lean-forward="false" selection-start-line="36" selection-start-column="77" selection-end-line="36" selection-end-column="77" />
+        <state relative-caret-position="769">
+          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
           <folding>
-            <element signature="e#5980#6264#0" expanded="false" />
-            <element signature="e#7612#8346#0" expanded="false" />
-            <element signature="e#8349#10384#1" expanded="false" />
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#5909#6193#0" expanded="false" />
+            <element signature="e#7541#8275#0" expanded="false" />
+            <element signature="e#8278#10313#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/user_recognition_tester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="735">
+          <caret line="107" column="0" lean-forward="true" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
