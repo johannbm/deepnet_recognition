@@ -2,11 +2,12 @@ import inspect
 import json
 import os
 import time
+import numpy as np
 
 import cv2
 from datetime import datetime
 import imutils
-
+import sys
 import background_subtractor as bgsub
 import user_recognizer
 
@@ -80,7 +81,7 @@ def test_video(filename):
 
         if conf["show_video"]["recognition"]:
             dnr.show_recognized_face(frame, face_locations, get_names(face_names))
-
+        process_this_frame = not process_this_frame
         execution_time = time.time() - start_time
         if limit_fps:
             if execution_time < 1 / float(fps):
@@ -89,9 +90,12 @@ def test_video(filename):
             break
 
         frame_counter += 1
+    print bg_sub_model.get_performance_stats()
+    print dnr.get_performance_stats()
     accumulate_performance_stats(bg_sub_model.get_performance_stats())
     accumulate_performance_stats(dnr.get_performance_stats())
     return {"logins": login_frames, "logouts": logout_frames}
+
 
 
 def calculate_score(annotations, results):
@@ -125,6 +129,11 @@ def calculate_score(annotations, results):
                         is_login_consumed = True
                     else:
                         incorrect_logins += 1
+        for logout in results_data["logouts"]:
+            user, frame_number = logout
+            if frame_number < annotations_data["logout"]:
+                premature_timeouts += 1
+
         score[key] = (login_delay, incorrect_logins, premature_timeouts, login_takeover, no_login)
     return score
 
@@ -143,7 +152,9 @@ def summarize_score(score, conf):
     total_premature = 0
     total_takeover = 0
     total_no_logins = 0
+    delays = []
     for key in score:
+        delays.append(score[key][0])
         total_login_delay += score[key][0]
         total_incorrect += score[key][1]
         total_premature += score[key][2]
@@ -151,6 +162,12 @@ def summarize_score(score, conf):
         total_no_logins += score[key][4]
 
     score_size = float(len(score))
+    print delays
+    delays = np.array(delays)
+    delay_mean = np.mean(delays)
+    delay_median = np.median(delays)
+    delay_std = np.std(delays)
+    delay_var = np.var(delays)
 
     log_directory = "./logs/"
 
@@ -164,9 +181,9 @@ def summarize_score(score, conf):
             print >>log_file, "Number of Faces per subject: {0}".format(conf["num_faces"])
 
         print >>log_file, "-" * 20 + " Scores " + "-"*20
-        print >>log_file, "Average login delay {0}".format(total_login_delay/score_size)
+        print >>log_file, "Login delay: Mean: {0}   Median: {1}     std: {2}    var: {3}".format(delay_mean, delay_median, delay_std, delay_var)
         print >>log_file, "Total incorrects {0}".format(total_incorrect)
-        print >>log_file, "Total premature logins {0}".format(total_premature)
+        print >>log_file, "Total premature timeouts {0}".format(total_premature)
         print >>log_file, "Total takeovers {0}".format(total_takeover)
         print >>log_file, "Total no-logins {0}".format(total_no_logins)
         print >>log_file, "Total tests done {0}".format(score_size)
@@ -177,7 +194,7 @@ def summarize_score(score, conf):
         for key in performance_stats:
             if type(performance_stats[key]) is list:
                 print >>log_file, "{0} average time: {1}".format(key, sum(performance_stats[key]) / float(len(performance_stats[key])))
-        print >>log_file, "Total running time: {0}".format(performance_stats["total_time"])
+        print >>log_file, "Total running time: {0}".format(time.strftime('%H:%M:%S', time.gmtime(performance_stats["total_time"])))
 
 
 if __name__ == "__main__":
