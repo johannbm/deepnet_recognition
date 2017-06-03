@@ -100,6 +100,7 @@ def test_video(filename):
         print bg_sub_model.get_performance_stats()
         print dnr.get_performance_stats()
         print "Total time passed: {0}".format(time.time() - first_time)
+        print "Average time spent per frame {0}".format((time.time() - first_time)/frame_counter)
     accumulate_performance_stats(bg_sub_model.get_performance_stats())
     accumulate_performance_stats(dnr.get_performance_stats())
     return {"logins": login_frames, "logouts": logout_frames}

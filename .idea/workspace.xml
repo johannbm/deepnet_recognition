@@ -32,8 +32,8 @@
       <file leaf-file-name="user_recognition_tester.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/user_recognition_tester.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="846">
-              <caret line="101" column="70" lean-forward="false" selection-start-line="101" selection-start-column="70" selection-end-line="101" selection-end-column="70" />
+            <state relative-caret-position="864">
+              <caret line="102" column="96" lean-forward="false" selection-start-line="102" selection-start-column="96" selection-end-line="102" selection-end-column="96" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -807,8 +807,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/user_recognition_tester.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="846">
-          <caret line="101" column="70" lean-forward="false" selection-start-line="101" selection-start-column="70" selection-end-line="101" selection-end-column="70" />
+        <state relative-caret-position="864">
+          <caret line="102" column="96" lean-forward="false" selection-start-line="102" selection-start-column="96" selection-end-line="102" selection-end-column="96" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
