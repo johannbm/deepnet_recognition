@@ -57,7 +57,7 @@ def test_video(filename):
 
     success = True
 
-    start_time = time.time()
+    first_time = time.time()
 
     while success:
         start_time = time.time()
@@ -99,7 +99,7 @@ def test_video(filename):
     if debug:
         print bg_sub_model.get_performance_stats()
         print dnr.get_performance_stats()
-        print "Total time passed: {0}".format(time.time() - start_time)
+        print "Total time passed: {0}".format(time.time() - first_time)
     accumulate_performance_stats(bg_sub_model.get_performance_stats())
     accumulate_performance_stats(dnr.get_performance_stats())
     return {"logins": login_frames, "logouts": logout_frames}
