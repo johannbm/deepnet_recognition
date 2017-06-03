@@ -40,6 +40,7 @@ def test_video(filename):
     cap.set(6, 5)
     fps = 30
     limit_fps = False
+    debug = True
 
     face_locations = []
     face_names = []
@@ -55,6 +56,8 @@ def test_video(filename):
     #performance_stats["found_faces"] = 0
 
     success = True
+
+    start_time = time.time()
 
     while success:
         start_time = time.time()
@@ -80,7 +83,10 @@ def test_video(filename):
                 logout_frames.append((logout, frame_counter))
 
         if conf["show_video"]["recognition"]:
+            s1 = time.time()
             dnr.show_recognized_face(frame, face_locations, get_names(face_names))
+            if debug:
+                print "Visualization time {0}".format(time.time() - s1)
         process_this_frame = not process_this_frame
         execution_time = time.time() - start_time
         if limit_fps:
@@ -90,8 +96,10 @@ def test_video(filename):
             break
 
         frame_counter += 1
-    print bg_sub_model.get_performance_stats()
-    print dnr.get_performance_stats()
+    if debug:
+        print bg_sub_model.get_performance_stats()
+        print dnr.get_performance_stats()
+        print "Total time passed: {0}".format(time.time() - start_time)
     accumulate_performance_stats(bg_sub_model.get_performance_stats())
     accumulate_performance_stats(dnr.get_performance_stats())
     return {"logins": login_frames, "logouts": logout_frames}
