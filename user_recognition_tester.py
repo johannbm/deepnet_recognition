@@ -72,10 +72,10 @@ def test_video(filename):
         frame = imutils.resize(frame, width=500)
 
         if bg_sub_model is None:
-            bg_sub_model = bgsub.BackgroundExtractor(frame, conf, path_to_file, conf["detection_algorithm"])
+            bg_sub_model = bgsub.BackgroundExtractor(frame, conf, path_to_file)
 
         if process_this_frame:
-            face_locations = bg_sub_model.get_bounding_box(frame)
+            face_locations = bg_sub_model.detect_face(frame)
             #performance_stats["found_faces"] += len(face_locations)
             face_names = dnr.recognize_face(frame, face_locations)
             login = dnr.check_login()
@@ -177,7 +177,10 @@ def summarize_score(score, conf):
 
     score_size = float(len(score))
     print delays
+    delays = [x for x in delays if x != 0]
     delays = np.array(delays)
+    delays = np.trim_zeros(delays)
+    print delays
     delay_mean = np.mean(delays)
     delay_median = np.median(delays)
     delay_std = np.std(delays)
@@ -188,6 +191,7 @@ def summarize_score(score, conf):
     with open(log_directory + str(datetime.now()), 'a') as log_file:
 
         print >>log_file, "-" * 20 + " Configurations " + "-"*20
+        print >>log_file, "Background subtraction applied: {0}".format(conf["do_bgsub"])
         print >>log_file, "Detection algorithm: {0}".format(bgsub.BackgroundExtractor.get_algorithm_text(conf["detection_algorithm"]))
         print >>log_file, "Recognition algorithm: {0}".format(user_recognizer.UserRecognizer.get_algorithm_text(conf["recognition_algorithm"]))
         print >>log_file, "Consecutive detection limit: {0}".format(conf["consecutive_detections"])

@@ -7,7 +7,7 @@ import utility
 
 class BackgroundExtractor:
 
-    def __init__(self, first_frame, conf, path_to_file, face_detection_algorithm):
+    def __init__(self, first_frame, conf, path_to_file):
         """
         :param first_frame: initial frame for initializing background model
         :param conf: configuration file
@@ -25,10 +25,11 @@ class BackgroundExtractor:
         self.current_frame = self.avg
         self.motion_threshold = conf["motion_threshold"]
 
+        self.do_bg_subtraction = conf["do_bgsub"]
         self.face_detection_method = None
         self.face_cascade = None
-        self.face_detection_algorithm = face_detection_algorithm
-        self.load_face_detection_algorithm(face_detection_algorithm, path_to_file, conf)
+        self.face_detection_algorithm = None
+        self.load_face_detection_algorithm(path_to_file, conf)
 
         self.negative_seconds_limit = conf["consecutive_negative_seconds_limit"]
         self.previous_positive_detection = time.time() - self.negative_seconds_limit
@@ -37,7 +38,7 @@ class BackgroundExtractor:
         self.is_dynamic = conf["dynamic_background"]
         self.performance_stats = {"Detection": [], "Total_detection_time": []}
 
-    def load_face_detection_algorithm(self, algorithm, path_to_file, conf):
+    def load_face_detection_algorithm(self, path_to_file, conf):
         """
         Loads the given face_detection algorithm and loads its cascade file if necessary
 
@@ -50,6 +51,8 @@ class BackgroundExtractor:
         :param conf: configuration file
         :return: None
         """
+        algorithm = conf["detection_algorithm"]
+        self.face_detection_algorithm = algorithm
         if algorithm == 1:
             self.face_detection_method = self.find_faces_dlib
         elif algorithm == 2:
@@ -141,17 +144,8 @@ class BackgroundExtractor:
         start = time.time()
         faces = face_recognition.face_locations(frame)
         self.performance_stats["Detection"].append(time.time() - start)
-        opencv_faces = [self.convert_dlib_location_to_opencv(x) for x in faces]
+        opencv_faces = [utility.convert_dlib_location_to_opencv(x) for x in faces]
         return opencv_faces
-
-    def convert_dlib_location_to_opencv(self, location):
-        """
-        Converts a dlib rect tuple to opencv rect tuple
-        :param location: dlib rect (top, right, bottom, left)
-        :return: opencv rect (x, y, w, h)
-        """
-        top, right, bottom, left = location #todo relocate?
-        return left, top, right-left, bottom-top
 
     def get_bounding_box(self, frame):
         """
@@ -174,9 +168,23 @@ class BackgroundExtractor:
                 self.accumulate_background()
 
             bounding_boxes.extend(self.get_face_bounds(faces, bounding_box))
-
-        self.performance_stats["Total_detection_time"].append(time.time() - start_time)
+        if len(bounding_boxes) > 0:
+            self.performance_stats["Total_detection_time"].append(time.time() - start_time)
         return bounding_boxes
+
+    def detect_face(self, frame):
+        return self.get_bounding_box(frame) if self.do_bg_subtraction else self.detect_face_basic(frame)
+
+    def detect_face_basic(self, frame):
+        """
+        Detects the face without doing background substitution
+        :param frame: image in which to search for a face
+        :return: A list of face locations in dlib-format
+        """
+        time_s = time.time()
+        faces = utility.convert_opencv_location_to_dlib(self.face_detection_method(frame))
+        self.performance_stats["Total_detection_time"].append(time.time() - time_s)
+        return faces
 
     def accumulate_background(self):
         """

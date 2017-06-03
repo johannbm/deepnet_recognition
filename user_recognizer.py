@@ -22,7 +22,7 @@ class UserRecognizer:
         self.current_user = None
         self.recent_faces_recognized = []
         self.reset_recognized_faces()
-        self.messenger = mirror_messenger.MirrorMessenger()
+        self.messenger = mirror_messenger.MirrorMessenger(conf["rpi_IP"])
 
     def load_face_recognition_algorithm(self, conf):
         if self.algorithm == 4:

@@ -8,12 +8,13 @@
 	"haar_cascade_path": "cascades/haarcascade_frontalface_default.xml",
 	"consecutive_negative_seconds_limit": 3,
 	"users": ["Ingunn", "Jarle", "Emil", "Eirik", "Jonathan", "Jessie", "Johannes", "Mathias", "Somedude", "Somechick"],
-	"detection_interval": 2,
 	"logout_time":5,
 	"capture_device":0,
+	"do_bgsub": true,
 	"consecutive_detections": 5,
 	"detection_algorithm": 2,
 	"recognition_algorithm": 2,
 	"num_faces": 7,
-	"use_rpi_camera": false
+	"use_rpi_camera": false,
+	"rpi_IP": "192.168.0.110"
 }

@@ -1,6 +1,7 @@
 import cv2
 import os
 import time
+import utility
 
 
 class FaceRecModel:
@@ -39,17 +40,17 @@ class FaceRecModel:
         self.model.load(os.path.join(self.training_file_dir, self.training_file))
 
     def get_average_stats(self):
-        return {"Matching": sum(self.performance_stats["Matching"]) / float(len(self.performance_stats["Matching"]))}
+        return {"Matching": utility.list_avg(self.performance_stats["Matching"])}
 
     def recognize_face(self, frame, locations):
         start_time = time.time()
         names = []
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         for location in locations:
-            x, y, w, h = self.convert_dlib_location_to_opencv(location)
+            x, y, w, h = utility.convert_dlib_location_to_opencv(location)
 
             if self.algorithm == 1:
-                #crop = self.basic_crop(frame, location)
+                #crop = utility.basic_crop_dlib(frame, location)
                 crop = self.crop(frame, x, y, w, h)
             else:
                 crop = self.resize(self.crop(frame, x, y, w, h))
@@ -58,14 +59,6 @@ class FaceRecModel:
 
         self.performance_stats["Matching"].append(time.time() - start_time)
         return names
-
-    def convert_dlib_location_to_opencv(self, location):
-        top, right, bottom, left = location
-        return (left, top, right-left, bottom-top)
-
-    def basic_crop(self, image, face_locations):
-        top, right, bottom, left = face_locations
-        return image[top:bottom, left:right]
 
     def crop(self, image, x, y, w, h):
         """Crop box defined by x, y (upper left corner) and w, h (width and height)
