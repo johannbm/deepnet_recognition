@@ -2,7 +2,7 @@ import time
 import nodejs_input
 import mirror_messenger
 import cv2
-import deepnet_face_recognition
+import facenet_recognition
 import os
 import inspect
 import opencv_modules
@@ -10,8 +10,8 @@ import opencv_modules
 
 class UserRecognizer:
 
-    def __init__(self, face_recognition_algorithm, conf):
-        self.algorithm = face_recognition_algorithm
+    def __init__(self, conf):
+        self.algorithm = 0
         self.face_recognizer = self.load_face_recognition_algorithm(conf)
 
         self.time_since_face_recognized = 0
@@ -25,15 +25,26 @@ class UserRecognizer:
         self.messenger = mirror_messenger.MirrorMessenger(conf["rpi_IP"])
 
     def load_face_recognition_algorithm(self, conf):
+        """
+        Loads the appropriate face recognition model
+        :param conf: configuration file of which key "recognition_algorithm" determines the model
+        :return: loaded face recognition model
+        """
+        self.algorithm = conf["recognition_algorithm"]
         if self.algorithm == 4:
             path_to_file = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-            model = deepnet_face_recognition.DeepNetRecognizer(path_to_file + "/images/", conf)
+            model = facenet_recognition.FacenetRecognizer(path_to_file + "/images/", conf)
         else:
             model = opencv_modules.FaceRecModel(algorithm=self.algorithm)
         return model
 
     @staticmethod
     def get_algorithm_text(algorithm):
+        """
+        Get the textualized information of recognition algorithm in use
+        :param algorithm: algorithm number
+        :return: Algorithm information string
+        """
         threshold = opencv_modules.FaceRecModel.get_threshold(algorithm)
         if algorithm == 1:
             return "LBPH Classifier     Threshold: {0}".format(threshold)
@@ -132,25 +143,12 @@ class UserRecognizer:
 
         return False, -1
 
-    def are_all_elements_equal(self, l):
-        """
-        checks if all elements in the list are equal
-        :param l: list to check
-        :return: True if all elements are equal, otherwise False
-        """
-        return l[1:] == l[:-1]
-
     def show_recognized_face(self, image_frame, face_locations, face_names):
         frame = image_frame.copy()
         for (top, right, bottom, left), name in zip(face_locations, face_names):
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-            #cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), -1)
-            #font = cv2.FONT_HERSHEY_DUPLEX
             font = cv2.FONT_HERSHEY_COMPLEX_SMALL
             cv2.putText(frame, str(name), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-            # cv2.putText(frame, "Detection: " + str(round(performance_stats["Detection"], 5)), (10, 20), font, 1.0, (255, 255, 255), 1)
-            # cv2.putText(frame, "Encoding: " + str(round(performance_stats["Encoding"], 5)), (10, 40), font, 1.0, (255, 255, 255), 1)
-            # cv2.putText(frame, "Matching: " + str(round(performance_stats["Matching"], 5)), (10, 60), font, 1.0, (255, 255, 255), 1)
 
         cv2.imshow('Video', frame)
 

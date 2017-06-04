@@ -1,6 +1,8 @@
 import mirror_messenger
 
-m = mirror_messenger.MirrorMessenger()
+ip = "enter test ip here"
+
+m = mirror_messenger.MirrorMessenger(ip)
 
 while True:
     msg = raw_input("enter text")

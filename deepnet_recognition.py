@@ -9,7 +9,7 @@ import inspect
 import os
 import signal
 from imutils.video import VideoStream
-import deepnet_face_recognition
+import facenet_recognition
 import face_landmarks
 import opencv_modules
 import user_recognizer

@@ -45,7 +45,7 @@ def test_video(filename):
     face_locations = []
     face_names = []
 
-    dnr = user_recognizer.UserRecognizer(conf["recognition_algorithm"], conf)
+    dnr = user_recognizer.UserRecognizer(conf)
 
     frame_counter = 0
     login_frames = []
@@ -206,8 +206,6 @@ def summarize_score(score, conf):
         print >>log_file, "Total no-logins {0}".format(total_no_logins)
         print >>log_file, "Total tests done {0}".format(score_size)
 
-
-
         print >>log_file, "-" * 20 + " Time Stats " + "-" * 20
         for key in performance_stats:
             if type(performance_stats[key]) is list:
@@ -218,7 +216,7 @@ def summarize_score(score, conf):
 if __name__ == "__main__":
 
     annotations = json.load(open(path_to_file + '/annotations.json'))
-    #print test_video('../test_data/training_videos/015.webm')
+    print test_video('../test_data/training_videos/jes04.mp4')
     results = {}
     start_time = time.time()
     for key in annotations:

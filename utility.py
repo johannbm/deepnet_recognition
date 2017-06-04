@@ -1,6 +1,40 @@
+import os
+
 
 def list_avg(l):
+    """
+    Calculates the average value of given list
+    :param l: list of numbers
+    :return: average value
+    """
     return sum(l) / float(len(l)) if len(l) > 0 else 0
+
+
+def are_all_elements_equal(l):
+    """
+    checks if all elements in the list are equal
+    :param l: list to check
+    :return: True if all elements are equal, otherwise False
+    """
+    return l[1:] == l[:-1]
+
+
+def get_sorted_directory(folder):
+    """
+    Creates a sorted list of basenames in directory
+    :param folder: folder to sort
+    :return: sorted list of basenames in folder
+    """
+    return sorted(os.listdir(folder))
+
+
+def most_common_element(lst):
+    """
+    Finds the most common element in a list. Break ties randomly
+    :param lst: list of elements
+    :return: most commong element
+    """
+    return max(set(lst), key=lst.count)
 
 
 def basic_crop_dlib(image, face_location):
@@ -25,6 +59,11 @@ def convert_dlib_location_to_opencv(location):
 
 
 def convert_opencv_location_to_dlib(location):
+    """
+    Converts an opencv location(s) to dlib location
+    :param location: list of location(s) in opencv format (x, y, w, h)
+    :return: list of locations in dlib format (top, right, bottom , left)
+    """
     return [_opencv_to_dlib(x) for x in location]
 
 

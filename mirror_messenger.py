@@ -11,8 +11,8 @@ class MirrorMessenger:
         self.url = 'tcp://{0}:5555'.format(ip)
         self.s.connect(self.url)
 
-    def to_node(self, type, message):
-        return json.dumps({type: message})
+    def to_node(self, code, message):
+        return json.dumps({code: message})
 
-    def send_to_mirror(self, type, message):
-        self.s.send(self.to_node(type, message))
+    def send_to_mirror(self, code, message):
+        self.s.send(self.to_node(code, message))

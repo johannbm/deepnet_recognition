@@ -2,10 +2,10 @@ import face_recognition as fr
 import os
 import inspect
 import time
-import mirror_messenger
+import utility
 
 
-class DeepNetRecognizer:
+class FacenetRecognizer:
 
     def __init__(self, image_folder, conf):
         self.number_of_faces = conf["num_faces"]
@@ -14,11 +14,15 @@ class DeepNetRecognizer:
         self.this_script_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
         self.performance_stats = {"Matching": [], "Facenet_encoding": []}
-        self.messenger = mirror_messenger.MirrorMessenger()
 
     def get_average_stats(self):
-        return {"Matching": sum(self.performance_stats["Matching"]) / float(len(self.performance_stats["Matching"])),
-                "Facenet_encoding": sum(self.performance_stats["Facenet_encoding"]) / float(len(self.performance_stats["Facenet_encoding"]))}
+        """
+        Calculates the average of the accumulated statistics
+        :return: Dictionary with the keys "Matching" and "Facenet_encoding" for the average
+                matching speed and encoding speed respectively
+        """
+        return {"Matching": utility.list_avg(self.performance_stats["Matching"]),
+                "Facenet_encoding": utility.list_avg(self.performance_stats["Facenet_encoding"])}
 
     def initialize_face_encoding(self, image_folder):
         """
@@ -28,10 +32,10 @@ class DeepNetRecognizer:
         """
         images = []
         names = []
-        for directory in self.get_sorted_directory(image_folder):
+        for directory in utility.get_sorted_directory(image_folder):
             dir_path = os.path.join(image_folder, directory)
             name = os.path.splitext(dir_path)[0]
-            person_images = self.get_sorted_directory(dir_path)
+            person_images = utility.get_sorted_directory(dir_path)
             for i in range(self.number_of_faces):
                 images.append(fr.load_image_file(os.path.join(dir_path, person_images[i])))
                 names.append(name)
@@ -43,10 +47,7 @@ class DeepNetRecognizer:
         :param image_folder: folder of images to encode
         :return: list of image names without extension
         """
-        return [os.path.splitext(image)[0] for image in self.get_sorted_directory(image_folder)]
-
-    def get_sorted_directory(self, image_folder):
-        return sorted(os.listdir(image_folder))
+        return [os.path.splitext(image)[0] for image in utility.get_sorted_directory(image_folder)]
 
     def encode_face(self, frame, face_locations, debug=True):
         """
@@ -102,10 +103,7 @@ class DeepNetRecognizer:
         """
         indexes = [(i//self.number_of_faces)+1 for i in range(len(match_list)) if match_list[i]]
 
-        return [self.most_common(indexes)] if len(indexes) > 0 else [-1]
-
-    def most_common(self, lst):
-        return max(set(lst), key=lst.count)
+        return [utility.most_common_element(indexes)] if len(indexes) > 0 else [-1]
 
     def recognize_face(self, frame, face_locations):
         """

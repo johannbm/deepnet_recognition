@@ -64,6 +64,11 @@ class BackgroundExtractor:
 
     @staticmethod
     def get_algorithm_text(algorithm):
+        """
+        Retrieves the textualized name of current detection algorithm
+        :param algorithm: integer of algorithm
+        :return: name of detection algorithm
+        """
         if algorithm == 1:
             return "Dlib HOG"
         elif algorithm == 2:
@@ -173,6 +178,11 @@ class BackgroundExtractor:
         return bounding_boxes
 
     def detect_face(self, frame):
+        """
+        Detects faces in the given image using the parameters given during class initialization
+        :param frame: image to search for faces in
+        :return: list of face locations in dlib-format
+        """
         return self.get_bounding_box(frame) if self.do_bg_subtraction else self.detect_face_basic(frame)
 
     def detect_face_basic(self, frame):
