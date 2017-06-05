@@ -32,13 +32,28 @@ if conf["use_rpi_camera"]:
 else:
     camera = cv2.VideoCapture('http://{0}:2067/html/cam_pic_new.php'.format(conf["rpi_IP"]))
 
-user_rec = user_recognizer.UserRecognizer(conf["recognition_algorithm"], conf)
+user_rec = user_recognizer.UserRecognizer(conf)
 
+
+def get_names(user_indexes):
+    """
+    Remember. It is 1-indexed
+    :param user_indexes:
+    :return:
+    """
+    users = conf["users"]
+    names = []
+    for i in user_indexes:
+        if i < 1:
+            names.append("{0} Unknown".format(i))
+        else:
+            names.append("{0} {1}".format(i, users[i-1]))
+    return names
 
 #cap.set(6, 5) cant remember what this does
 #cap.set(cv2.cv.CV_CAP_PROP_FPS, 5)
 
-fl = face_landmarks.WinkClassifier()
+#fl = face_landmarks.WinkClassifier()
 
 # Initialize some variables
 face_locations = []
@@ -72,12 +87,12 @@ while True:
 
         #print "landmark execution time: " + str(fl.performance_stats["Landmarks"])
 
-    #process_this_frame = not process_this_frame
-    if conf["show_video"]["landmarks"]:
-        fl.show_landmarks(frame)
+    process_this_frame = not process_this_frame
+ #   if conf["show_video"]["landmarks"]:
+  #      fl.show_landmarks(frame)
 
     if conf["show_video"]["recognition"]:
-        user_rec.show_recognized_face(frame, face_locations, face_names)
+        user_rec.show_recognized_face(frame, face_locations, get_names(face_names))
     else:
         print performance_stats
     execution_time = time.time() - start_time

@@ -1,0 +1,17 @@
+-------------------- Configurations --------------------
+Background subtraction applied: False
+Detection algorithm: LBP Cascade
+Recognition algorithm: Fisherface Classifier     Threshold: 600
+Consecutive detection limit: 5
+-------------------- Scores --------------------
+Login delay: Mean: 118.285714286   Median: 32.0     std: 166.404596679    var: 27690.4897959
+Total incorrects 6
+Total premature timeouts 0
+Total takeovers 0
+Total no-logins 7
+Total tests done 21.0
+-------------------- Time Stats --------------------
+Detection average time: 0.0178517361218
+Total_detection average time: 0.0178672205815
+Matching average time: 0.000349264551701
+Total running time: 00:07:12

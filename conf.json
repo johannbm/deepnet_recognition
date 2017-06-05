@@ -13,8 +13,9 @@
 	"do_bgsub": true,
 	"consecutive_detections": 5,
 	"detection_algorithm": 2,
-	"recognition_algorithm": 1,
+	"recognition_algorithm": 2,
 	"num_faces": 7,
+	"allow_strangers": false,
 	"use_rpi_camera": false,
 	"rpi_IP": "192.168.0.110"
 }

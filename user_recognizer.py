@@ -18,6 +18,7 @@ class UserRecognizer:
         self.logout_time = conf["logout_time"]
         self.consecutive_detection_limit = conf["consecutive_detections"]
         self.detection_index = 0
+        self.allow_strangers = conf["allow_strangers"]
 
         self.current_user = None
         self.recent_faces_recognized = []
@@ -59,7 +60,7 @@ class UserRecognizer:
         return self.face_recognizer.get_average_stats()
 
     def reset_recognized_faces(self):
-        self.recent_faces_recognized = [[-1]] * self.consecutive_detection_limit
+        self.recent_faces_recognized = [[-2]] * self.consecutive_detection_limit
 
     def recognize_face(self, frame, face_locations):
         """
@@ -96,12 +97,14 @@ class UserRecognizer:
         same_user, index = self.are_all_same_user(self.recent_faces_recognized, self.consecutive_detection_limit)
 
         if same_user:
-            if self.current_user is None and index > 0:
-                self.current_user = index
-                nodejs_input.to_node("login", {"user": self.current_user})
-                self.messenger.send_to_mirror("login", {"user": self.current_user})
+            if self.current_user is None:
+                index_limit = -2 if self.allow_strangers else 0
+                if index > -index_limit:
+                    self.current_user = index
+                    nodejs_input.to_node("login", {"user": self.current_user})
+                    self.messenger.send_to_mirror("login", {"user": self.current_user})
+                    return self.current_user
 
-                return self.current_user
         return False
 
     def check_logout(self):
@@ -141,7 +144,7 @@ class UserRecognizer:
             if user_count[key] == detection_limit:
                 return True, key
 
-        return False, -1
+        return False, -2
 
     def show_recognized_face(self, image_frame, face_locations, face_names):
         frame = image_frame.copy()

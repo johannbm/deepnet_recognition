@@ -1,0 +1,17 @@
+-------------------- Configurations --------------------
+Detection algorithm: LBP Cascade
+Recognition algorithm: Google Facenet
+Consecutive detection limit: 5
+Number of Faces per subject: 7
+-------------------- Scores --------------------
+Average login delay 13.0
+Total incorrects 0
+Total premature timeouts 2
+Total takeovers 0
+Total no-logins 0
+Total tests done 21.0
+-------------------- Time Stats --------------------
+Detection average time: 0.00813884199696
+Facenet_encoding average time: 0.00533725185774
+Matching average time: 0.000144677357843
+Total running time: 00:10:45

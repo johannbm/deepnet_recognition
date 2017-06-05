@@ -200,6 +200,7 @@ def summarize_score(score, conf):
 
         print >>log_file, "-" * 20 + " Scores " + "-"*20
         print >>log_file, "Login delay: Mean: {0}   Median: {1}     std: {2}    var: {3}".format(delay_mean, delay_median, delay_std, delay_var)
+        print >>log_file, "Total corrects {0}".format(len(delays))
         print >>log_file, "Total incorrects {0}".format(total_incorrect)
         print >>log_file, "Total premature timeouts {0}".format(total_premature)
         print >>log_file, "Total takeovers {0}".format(total_takeover)
@@ -216,7 +217,7 @@ def summarize_score(score, conf):
 if __name__ == "__main__":
 
     annotations = json.load(open(path_to_file + '/annotations.json'))
-    print test_video('../test_data/training_videos/jes04.mp4')
+    #print test_video('../test_data/training_videos/joh01.mp4')
     results = {}
     start_time = time.time()
     for key in annotations:

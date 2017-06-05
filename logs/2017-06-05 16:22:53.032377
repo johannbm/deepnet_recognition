@@ -1,0 +1,17 @@
+-------------------- Configurations --------------------
+Background subtraction applied: True
+Detection algorithm: LBP Cascade
+Recognition algorithm: Eigenface Classifier     Threshold: 3000
+Consecutive detection limit: 5
+-------------------- Scores --------------------
+Login delay: Mean: 58.5   Median: 49.5     std: 48.3890483477    var: 2341.5
+Total incorrects 11
+Total premature timeouts 1
+Total takeovers 0
+Total no-logins 16
+Total tests done 35.0
+-------------------- Time Stats --------------------
+Detection average time: 0.00886233669906
+Total_detection average time: 0.0147442280524
+Matching average time: 0.000696777988014
+Total running time: 00:08:22
