@@ -99,7 +99,7 @@ class UserRecognizer:
         if same_user:
             if self.current_user is None:
                 index_limit = -2 if self.allow_strangers else 0
-                if index > -index_limit:
+                if index > index_limit:
                     self.current_user = index
                     nodejs_input.to_node("login", {"user": self.current_user})
                     self.messenger.send_to_mirror("login", {"user": self.current_user})

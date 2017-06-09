@@ -30,7 +30,8 @@ if conf["use_rpi_camera"]:
     signal.signal(signal.SIGINT, shutdown)
     time.sleep(conf["camera_warmup_time"])
 else:
-    camera = cv2.VideoCapture('http://{0}:2067/html/cam_pic_new.php'.format(conf["rpi_IP"]))
+    #camera = cv2.VideoCapture('http://{0}:2067/html/cam_pic_new.php'.format(conf["rpi_IP"]))
+    camera = VideoStream(src='http://{0}:2067/html/cam_pic_new.php'.format(conf["rpi_IP"])).start()
 
 user_rec = user_recognizer.UserRecognizer(conf)
 
@@ -68,8 +69,9 @@ print "Init recognition"
 while True:
     # Grab a single frame of video
     start_time = time.time()
-    #frame = camera.read()
-    ret, frame = camera.read()
+    frame = camera.read()
+    #print camera.read()
+    #ret, frame = camera.read()
 
     frame = imutils.resize(frame, width=500)
 

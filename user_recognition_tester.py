@@ -40,7 +40,7 @@ def test_video(filename):
     cap.set(6, 5)
     fps = 30
     limit_fps = False
-    debug = True
+    debug = False
 
     face_locations = []
     face_names = []
@@ -55,8 +55,8 @@ def test_video(filename):
     process_this_frame = True
     image_read_times = []
     visualization_times = []
-    #performance_stats["found_faces"] = 0
-
+    num_found_faces = 0
+    num_recognized_faces = 0
     success = True
 
     first_time = time.time()
@@ -76,8 +76,9 @@ def test_video(filename):
 
         if process_this_frame:
             face_locations = bg_sub_model.detect_face(frame)
-            #performance_stats["found_faces"] += len(face_locations)
+            num_found_faces += len(face_locations)
             face_names = dnr.recognize_face(frame, face_locations)
+            num_recognized_faces += len([x for x in face_names if x > 0])
             login = dnr.check_login()
             logout = dnr.check_logout()
             if login:
@@ -105,14 +106,23 @@ def test_video(filename):
         print "Average time spent per frame {0}".format((time.time() - first_time)/frame_counter)
         print "Image read time: {0}".format(utility.list_avg(image_read_times))
         print "Visualization time: {0}".format(utility.list_avg(visualization_times))
+        print "Face found {0}, face recognized {1}, ratio {2}".format(num_found_faces,
+                                                                      num_recognized_faces)
 
     accumulate_performance_stats(bg_sub_model.get_performance_stats())
     accumulate_performance_stats(dnr.get_performance_stats())
+    accumulate_performance_stats({"num_found_faces": num_found_faces, "num_recognized_faces": num_recognized_faces})
     return {"logins": login_frames, "logouts": logout_frames}
 
 
 
 def calculate_score(annotations, results):
+    """
+    currently may count login twice. FIX!
+    :param annotations:
+    :param results:
+    :return:
+    """
     #(login-delay, incorrect-logins, premature-timeouts, login-takeovers)
     score = {}
     for key in annotations:
@@ -207,6 +217,11 @@ def summarize_score(score, conf):
         print >>log_file, "Total no-logins {0}".format(total_no_logins)
         print >>log_file, "Total tests done {0}".format(score_size)
 
+        print >>log_file, "Total found faces {0}".format(sum(performance_stats["num_found_faces"]))
+        print >>log_file, "Total recognized faces {0}".format(sum(performance_stats["num_recognized_faces"]))
+        print >>log_file, "Ratio {0}".format(sum(performance_stats["num_recognized_faces"]) / float(sum(performance_stats["num_found_faces"])))
+
+
         print >>log_file, "-" * 20 + " Time Stats " + "-" * 20
         for key in performance_stats:
             if type(performance_stats[key]) is list:
@@ -217,7 +232,8 @@ def summarize_score(score, conf):
 if __name__ == "__main__":
 
     annotations = json.load(open(path_to_file + '/annotations.json'))
-    #print test_video('../test_data/training_videos/joh01.mp4')
+    #print test_video('../test_data/training_videos/011.webm')
+    #input()
     results = {}
     start_time = time.time()
     for key in annotations:

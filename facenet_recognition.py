@@ -49,7 +49,7 @@ class FacenetRecognizer:
         """
         return [os.path.splitext(image)[0] for image in utility.get_sorted_directory(image_folder)]
 
-    def encode_face(self, frame, face_locations, debug=True):
+    def encode_face(self, frame, face_locations, debug=False):
         """
         creates encoding for the face(s) given by face_locations
         :param frame: current frame
@@ -66,7 +66,7 @@ class FacenetRecognizer:
 
         return face_encodings
 
-    def compare_face(self, new_encoding, debug=True):
+    def compare_face(self, new_encoding, debug=False):
         """
         compares the given encoding with the set of known faces
         :param new_encoding: encoding to be classified

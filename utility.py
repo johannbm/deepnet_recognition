@@ -1,5 +1,5 @@
 import os
-
+import numpy as np
 
 def list_avg(l):
     """
@@ -60,7 +60,7 @@ def convert_dlib_location_to_opencv(location):
 
 def convert_opencv_location_to_dlib(location):
     """
-    Converts an opencv location(s) to dlib location
+    Converts an opencv location(s) to dlib location. Ensure all numbers are of type numpy.int64
     :param location: list of location(s) in opencv format (x, y, w, h)
     :return: list of locations in dlib format (top, right, bottom , left)
     """
@@ -70,5 +70,5 @@ def convert_opencv_location_to_dlib(location):
 def _opencv_to_dlib(location):
     if len(location) == 0:
         return ()
-    x, y, w, h = location
+    x, y, w, h = location.astype(np.int64)
     return y, w + x, y + h, x

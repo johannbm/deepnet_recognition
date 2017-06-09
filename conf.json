@@ -1,5 +1,5 @@
 {
-	"show_video": {"average": false, "blur":false, "contour":false, "detection":false, "recognition":true, "landmarks":false},
+	"show_video": {"average": false, "blur":false, "contour":true, "detection":true, "recognition":true, "landmarks":false},
 	"camera_warmup_time": 2,
 	"motion_threshold": 15,
 	"min_area": 2000,
@@ -10,11 +10,11 @@
 	"users": ["Ingunn", "Jarle", "Emil", "Eirik", "Jonathan", "Jessie", "Johannes", "Mathias", "Somedude", "Somechick"],
 	"logout_time":5,
 	"capture_device":0,
-	"do_bgsub": true,
+	"do_bgsub": false,
 	"consecutive_detections": 5,
-	"detection_algorithm": 2,
-	"recognition_algorithm": 2,
-	"num_faces": 7,
+	"detection_algorithm": 3,
+	"recognition_algorithm": 4,
+	"num_faces": 9,
 	"allow_strangers": false,
 	"use_rpi_camera": false,
 	"rpi_IP": "192.168.0.110"
