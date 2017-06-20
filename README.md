@@ -25,7 +25,7 @@ This software requires interaction between various libraries for the system to w
 
 - On the RPI:
     - [MagicMirror<sup>2</sup>](https://github.com/MichMich/MagicMirror)
-    - this
+    - [MMM-Facial-Recognition-Custom](https://github.com/johannbm/MMM-Facial-Recognition-Custom)
     - [RPi-Cam-Web-Interface](http://elinux.org/RPi-Cam-Web-Interface)
 - On remote machine:
     - This repository
@@ -61,7 +61,7 @@ to swap modules based on current user.
 #### Running the System on a Remote Architecture
 
 1. Run [MagicMirror<sup>2</sup>](https://github.com/MichMich/MagicMirror) on the RPI
-    - Make sure THIS MagicMirror<sup>2</sup> module is installed
+    - Make sure [MMM-Facial-Recognition-Custom](https://github.com/johannbm/MMM-Facial-Recognition-Custom) MagicMirror<sup>2</sup> module is installed
 2. Host the camera as a IP camera using [RPi-Cam-Web-Interface](http://elinux.org/RPi-Cam-Web-Interface) software
     - Set **rpi_IP** in *conf.json* to the RPI's IP adress
     - Set **run_on_rpi** in *conf.json* to ```false```
