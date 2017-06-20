@@ -232,8 +232,8 @@ def summarize_score(score, conf):
 if __name__ == "__main__":
 
     annotations = json.load(open(path_to_file + '/annotations.json'))
-    #print test_video('../test_data/training_videos/011.webm')
-    #input()
+    print test_video('../test_data/training_videos/013.webm')
+    input()
     results = {}
     start_time = time.time()
     for key in annotations:
